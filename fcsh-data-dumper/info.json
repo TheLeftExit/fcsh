@@ -1,0 +1,8 @@
+{
+  "name": "fcsh-data-dumper",
+  "version": "1.0",
+  "title": "fcsh data dumper",
+  "author": "theleftexit",
+  "factorio_version": "2.0",
+  "dependencies": ["base >= 2.0.0"]
+}
