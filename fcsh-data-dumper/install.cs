@@ -1,4 +1,4 @@
-#!/usr/bin/dotnet run
+#!/usr/bin/dotnet --
 
 var modFolder = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
@@ -10,6 +10,12 @@ if (Directory.Exists(modFolder))
 {
     Directory.Delete(modFolder, true);
     Console.WriteLine($"{modFolder} deleted.");
+}
+
+if (args.Contains("-r"))
+{
+    Console.WriteLine("Exiting early due to -r.");
+    return;
 }
 
 Directory.CreateDirectory(modFolder);

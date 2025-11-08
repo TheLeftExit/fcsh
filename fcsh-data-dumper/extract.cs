@@ -1,4 +1,4 @@
-#!/usr/bin/dotnet run
+#!/usr/bin/dotnet --
 
 var logPath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
