@@ -21988,4 +21988,205 @@
       ],
     },
   ],
+  "MiningDrills": [
+    {
+      "Name": "electric-mining-drill",
+      "MiningSpeed": 0.5,
+      "ResourceCategories": [
+        "basic-solid",
+      ],
+    },
+    {
+      "Name": "burner-mining-drill",
+      "MiningSpeed": 0.25,
+      "ResourceCategories": [
+        "basic-solid",
+      ],
+    },
+    {
+      "Name": "pumpjack",
+      "MiningSpeed": 1,
+      "ResourceCategories": [
+        "basic-fluid",
+      ],
+    },
+    {
+      "Name": "big-mining-drill",
+      "MiningSpeed": 2.5,
+      "ResourceCategories": [
+        "basic-solid",
+        "hard-solid",
+      ],
+    },
+  ],
+  "ResourceEntities": [
+    {
+      "Name": "iron-ore",
+      "Category": "basic-solid",
+      "Minable": {
+        "MiningTime": 1,
+        "Result": "iron-ore",
+        "Count": 1,
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "copper-ore",
+      "Category": "basic-solid",
+      "Minable": {
+        "MiningTime": 1,
+        "Result": "copper-ore",
+        "Count": 1,
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "coal",
+      "Category": "basic-solid",
+      "Minable": {
+        "MiningTime": 1,
+        "Result": "coal",
+        "Count": 1,
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "stone",
+      "Category": "basic-solid",
+      "Minable": {
+        "MiningTime": 1,
+        "Result": "stone",
+        "Count": 1,
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "uranium-ore",
+      "Category": "basic-solid",
+      "Minable": {
+        "MiningTime": 2,
+        "Result": "uranium-ore",
+        "Count": 1,
+        "RequiredFluid": "sulfuric-acid",
+        "FluidAmount": 10,
+      },
+    },
+    {
+      "Name": "crude-oil",
+      "Category": "basic-fluid",
+      "Minable": {
+        "MiningTime": 1,
+        "Results": [
+          {
+            "Name": "crude-oil",
+            "Type": "fluid",
+            "Amount": null,
+            "AmountMin": 10,
+            "AmountMax": 10,
+            "Probability": 1,
+            "Temperature": null,
+          },
+        ],
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "tungsten-ore",
+      "Category": "hard-solid",
+      "Minable": {
+        "MiningTime": 5,
+        "Result": "tungsten-ore",
+        "Count": 1,
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "calcite",
+      "Category": "basic-solid",
+      "Minable": {
+        "MiningTime": 1,
+        "Result": "calcite",
+        "Count": 1,
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "sulfuric-acid-geyser",
+      "Category": "basic-fluid",
+      "Minable": {
+        "MiningTime": 1,
+        "Results": [
+          {
+            "Name": "sulfuric-acid",
+            "Type": "fluid",
+            "Amount": null,
+            "AmountMin": 10,
+            "AmountMax": 10,
+            "Probability": 1,
+            "Temperature": null,
+          },
+        ],
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "scrap",
+      "Category": "basic-solid",
+      "Minable": {
+        "MiningTime": 0.5,
+        "Result": "scrap",
+        "Count": 1,
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "lithium-brine",
+      "Category": "basic-fluid",
+      "Minable": {
+        "MiningTime": 1,
+        "Results": [
+          {
+            "Name": "lithium-brine",
+            "Type": "fluid",
+            "Amount": null,
+            "AmountMin": 1,
+            "AmountMax": 1,
+            "Probability": 1,
+            "Temperature": null,
+          },
+        ],
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+    {
+      "Name": "fluorine-vent",
+      "Category": "basic-fluid",
+      "Minable": {
+        "MiningTime": 1,
+        "Results": [
+          {
+            "Name": "fluorine",
+            "Type": "fluid",
+            "Amount": null,
+            "AmountMin": 1,
+            "AmountMax": 1,
+            "Probability": 1,
+            "Temperature": null,
+          },
+        ],
+        "RequiredFluid": null,
+        "FluidAmount": 0,
+      },
+    },
+  ],
 }

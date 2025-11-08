@@ -66,6 +66,57 @@ end
 
 -- utils end
 
+-- classes start
+
+function write_IngredientPrototype(this) -- https://lua-api.factorio.com/latest/types/IngredientPrototype.html
+    writeObjectStart()
+    writePropertyString('Name', this.name)
+    writePropertyString('Type', this.type)
+    writePropertyValue('Amount', this.amount)
+    if(this.type == 'fluid') then
+        writePropertyValue('Temperature', this.temperature)
+        writePropertyValue('MinimumTemperature', this.minimum_temperature)
+        writePropertyValue('MaximumTemperature', this.maximum_temperature)
+    end
+    writeObjectEnd()
+end
+
+function write_ProductPrototype(this) -- https://lua-api.factorio.com/latest/types/ProductPrototype.html
+    writeObjectStart()
+    writePropertyString('Name', this.name)
+    writePropertyString('Type', this.type)
+    writePropertyValue('Amount', this.amount)
+    writePropertyValue('AmountMin', this.amount_min)
+    writePropertyValue('AmountMax', this.amount_max)
+    writePropertyValue('Probability', this.probability)
+    if(this.type == 'item') then
+        writePropertyValue('ExtraCountFraction', this.extra_count_fraction)
+    else
+        writePropertyValue('Temperature', this.temperature)
+    end
+    writeObjectEnd()
+end
+
+function write_EffectReceiver(owner)
+    if(owner.effect_receiver ~= nil) then
+        writePropertyObject('EffectReceiver')
+        if(owner.effect_receiver.base_effect ~= nil) then
+            writePropertyObject('BaseEffect')
+            
+            writePropertyValue('Consumption', owner.effect_receiver.base_effect.consumption)
+            writePropertyValue('Speed', owner.effect_receiver.base_effect.speed)
+            writePropertyValue('Productivity', owner.effect_receiver.base_effect.productivity)
+            writePropertyValue('Pollution', owner.effect_receiver.base_effect.pollution)
+            writePropertyValue('Quality', owner.effect_receiver.base_effect.quality)
+
+            writeObjectEnd()
+        end
+        writeObjectEnd()
+    end
+end
+
+-- classes end
+
 
 writeLine('')
 writeLine('fcsh-data-dumper-start')
@@ -84,16 +135,7 @@ for _, recipe in pairs(data.raw['recipe']) do
     if(recipe.ingredients ~= nil) then
         writePropertyArray('Ingredients')
         for _, ingredient in pairs(recipe.ingredients) do
-            writeObjectStart() -- https://lua-api.factorio.com/latest/types/IngredientPrototype.html
-            writePropertyString('Name', ingredient.name)
-            writePropertyString('Type', ingredient.type)
-            writePropertyValue('Amount', ingredient.amount)
-            if(ingredient.type == 'fluid') then
-                writePropertyValue('Temperature', ingredient.temperature)
-                writePropertyValue('MinimumTemperature', ingredient.minimum_temperature)
-                writePropertyValue('MaximumTemperature', ingredient.maximum_temperature)
-            end
-            writeObjectEnd()
+            write_IngredientPrototype(ingredient)
         end
         writeArrayEnd()
     end
@@ -101,19 +143,7 @@ for _, recipe in pairs(data.raw['recipe']) do
     if(recipe.results ~= nil) then
         writePropertyArray('Results')
         for _, product in pairs(recipe.results) do
-            writeObjectStart() -- https://lua-api.factorio.com/latest/types/ProductPrototype.html
-            writePropertyString('Name', product.name)
-            writePropertyString('Type', product.type)
-            writePropertyValue('Amount', product.amount)
-            writePropertyValue('AmountMin', product.amount_min)
-            writePropertyValue('AmountMax', product.amount_max)
-            writePropertyValue('Probability', product.probability)
-            if(product.type == 'item') then
-                writePropertyValue('ExtraCountFraction', product.extra_count_fraction)
-            else
-                writePropertyValue('Temperature', product.temperature)
-            end
-            writeObjectEnd()
+            write_ProductPrototype(product)
         end
         writeArrayEnd()
     end
@@ -135,24 +165,54 @@ for _, craftingMachineType in pairs({ 'assembling-machine', 'rocket-silo', 'furn
         end
         writeArrayEnd()
 
-        if(craftingMachine.effect_receiver ~= nil) then
-            writePropertyObject('EffectReceiver')
-            if(craftingMachine.effect_receiver.base_effect ~= nil) then
-                writePropertyObject('BaseEffect')
-                
-                writePropertyValue('Consumption', craftingMachine.effect_receiver.base_effect.consumption)
-                writePropertyValue('Speed', craftingMachine.effect_receiver.base_effect.speed)
-                writePropertyValue('Productivity', craftingMachine.effect_receiver.base_effect.productivity)
-                writePropertyValue('Pollution', craftingMachine.effect_receiver.base_effect.pollution)
-                writePropertyValue('Quality', craftingMachine.effect_receiver.base_effect.quality)
-
-                writeObjectEnd()
-            end
-            writeObjectEnd()
-        end
+        write_EffectReceiver(craftingMachine)
 
         writeObjectEnd()
     end
+end
+writeArrayEnd()
+
+writePropertyArray('MiningDrills')
+for _, miningDrill in pairs(data.raw['mining-drill']) do
+    writeObjectStart() -- https://lua-api.factorio.com/latest/prototypes/MiningDrillPrototype.html
+    writePropertyString('Name', miningDrill.name)
+    writePropertyValue('MiningSpeed', miningDrill.mining_speed)
+
+    writePropertyArray('ResourceCategories')
+    for _, resourceCategory in pairs(miningDrill.resource_categories) do
+        writeItemString(resourceCategory)
+    end
+    writeArrayEnd()
+
+    write_EffectReceiver(miningDrill)
+
+    writeObjectEnd()
+end
+writeArrayEnd()
+
+writePropertyArray('ResourceEntities')
+for _, resourceEntity in pairs(data.raw['resource']) do
+    writeObjectStart() -- https://lua-api.factorio.com/latest/prototypes/ResourceEntityPrototype.html
+    writePropertyString('Name', resourceEntity.name)
+    writePropertyString('Category', resourceEntity.category or 'basic-solid')
+
+    writePropertyObject('Minable')
+    writePropertyValue('MiningTime', resourceEntity.minable.mining_time)
+    if(resourceEntity.minable.results ~= nil) then
+        writePropertyArray('Results')
+        for _, product in pairs(resourceEntity.minable.results) do
+            write_ProductPrototype(product)
+        end
+        writeArrayEnd()
+    else
+        writePropertyString('Result', resourceEntity.minable.result)
+        writePropertyValue('Count', resourceEntity.minable.count or 1)
+    end
+    writePropertyString('RequiredFluid', resourceEntity.minable.required_fluid)
+    writePropertyValue('FluidAmount', resourceEntity.minable.fluid_amount or 0)
+    writeObjectEnd()
+
+    writeObjectEnd()
 end
 writeArrayEnd()
 

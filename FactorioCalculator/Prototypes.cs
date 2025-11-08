@@ -1,6 +1,8 @@
 public record DataRoot(
     RecipePrototype[] Recipes,
-    CraftingMachinePrototype[] CraftingMachines
+    CraftingMachinePrototype[] CraftingMachines,
+    MiningDrillPrototype[] MiningDrills,
+    ResourceEntityPrototype[] ResourceEntities
 );
 
 public record RecipePrototype(
@@ -23,7 +25,7 @@ public record IngredientPrototype(
 public record ProductPrototype(
     string Name,
     string Type,
-    decimal Amount,
+    decimal? Amount,
     decimal? AmountMin,
     decimal? AmountMax,
     decimal? Probability,
@@ -48,4 +50,26 @@ public record Effect(
     decimal? Productivity,
     decimal? Pollution,
     decimal? Quality
+);
+
+public record MiningDrillPrototype(
+    string Name,
+    decimal MiningSpeed,
+    string[] ResourceCategories,
+    EffectReceiver? EffectReceiver
+);
+
+public record ResourceEntityPrototype(
+    string Name,
+    string Category,
+    MiningProperties Minable
+);
+
+public record MiningProperties(
+    decimal MiningTime,
+    ProductPrototype[]? Results,
+    string? Result,
+    decimal Count,
+    string? RequiredFluid,
+    decimal FluidAmount
 );

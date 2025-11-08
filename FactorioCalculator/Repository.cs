@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 
 public class Repository
 {
@@ -14,11 +15,15 @@ public class Repository
     {
         Instance = new()
         {
-            Recipes = data.Recipes.Select(DecodeRecipe).ToFrozenDictionary(x => x.Name),
-            Buildings = data.CraftingMachines.Select(DecodeBuilding).ToFrozenDictionary(x => x.Name)
+            Recipes = data.Recipes.Select(DecodeRecipe)
+                .Concat(data.ResourceEntities.Select(DecodeRecipe))
+                .ToFrozenDictionary(x => x.Name),
+            Buildings = data.CraftingMachines.Select(DecodeBuilding)
+                .Concat(data.MiningDrills.Select(DecodeBuilding))
+                .ToFrozenDictionary(x => x.Name)
         };
     }
-    
+
     private static Building DecodeBuilding(CraftingMachinePrototype prototype)
     {
         return new()
@@ -29,6 +34,21 @@ public class Repository
             Categories = prototype.CraftingCategories
         };
     }
+    
+    private static ItemSlot DecodeProduct(ProductPrototype prototype)
+    {
+        var baseAmount = (prototype.Amount, prototype.AmountMin, prototype.AmountMax) switch
+        {
+            (decimal amount, null, null) => (Rational)amount,
+            (null, decimal amountMin, decimal amountMax) => amountMin == amountMax ? (Rational)amountMin : throw new NotSupportedException(),
+            _ => throw new NotSupportedException()
+        };
+        return new()
+        {
+            Name = prototype.Name,
+            Amount = baseAmount * (prototype.Probability ?? 1) + (prototype.ExtraCountFraction ?? 0)
+        };
+    }
 
     private static Recipe DecodeRecipe(RecipePrototype prototype)
     {
@@ -37,16 +57,31 @@ public class Repository
             Name = prototype.Name,
             Energy = prototype.EnergyRequired,
             Category = prototype.Category,
-            Ingredients = prototype.Ingredients?.Select(x => new ItemSlot()
-            {
-                Name = x.Name,
-                Amount = x.Amount
-            }).ToArray() ?? Array.Empty<ItemSlot>(),
-            Products = prototype.Results?.Select(x => new ItemSlot()
-            {
-                Name = x.Name,
-                Amount = (Rational)x.Amount * (x.Probability ?? 1) + (x.ExtraCountFraction ?? 0)
-            }).ToArray() ?? Array.Empty<ItemSlot>()
+            Ingredients = prototype.Ingredients?.Select(x => new ItemSlot(x.Name, x.Amount)).ToArray() ?? [],
+            Products = prototype.Results?.Select(DecodeProduct).ToArray() ?? []
+        };
+    }
+
+    private static Building DecodeBuilding(MiningDrillPrototype prototype)
+    {
+        return new()
+        {
+            Name = prototype.Name,
+            Speed = prototype.MiningSpeed,
+            BaseProductivity = prototype.EffectReceiver?.BaseEffect?.Productivity ?? 1,
+            Categories = prototype.ResourceCategories
+        };
+    }
+
+    private static Recipe DecodeRecipe(ResourceEntityPrototype prototype)
+    {
+        return new()
+        {
+            Name = prototype.Name,
+            Category = prototype.Category,
+            Energy = prototype.Minable.MiningTime,
+            Ingredients = prototype.Minable.RequiredFluid is not null ? [new ItemSlot(prototype.Minable.RequiredFluid, prototype.Minable.FluidAmount)] : [],
+            Products = prototype.Minable.Results?.Select(DecodeProduct).ToArray() ?? [new ItemSlot(prototype.Minable.Result ?? throw new NotSupportedException(), prototype.Minable.Count)]
         };
     }
 }
