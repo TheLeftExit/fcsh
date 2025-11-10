@@ -3,9 +3,10 @@ using System.Numerics;
 
 public readonly struct Rational
 {
-    private readonly BigInteger _top;
-    private readonly BigInteger _bottom;
-    private readonly bool _sign;
+    private readonly bool _initialized; // default(Rational) == (Rational)0
+    public readonly BigInteger Top { get => _initialized ? field : 0; init; }
+    public readonly BigInteger Bottom { get => _initialized ? field : 1; init; }
+    public readonly bool Sign { get => _initialized ? field : true; init; }
 
     public Rational(BigInteger top, BigInteger bottom, bool sign)
     {
@@ -18,7 +19,7 @@ public readonly struct Rational
 
         if (top == 0)
         {
-            (_top, _bottom, _sign) = (0, 1, true);
+            (Top, Bottom, Sign) = (0, 1, true);
             return;
         }
         if (top < 0)
@@ -28,7 +29,8 @@ public readonly struct Rational
         }
 
         var gdc = BigInteger.GreatestCommonDivisor(top, bottom);
-        (_top, _bottom, _sign) = (top / gdc, bottom / gdc, sign);
+        (Top, Bottom, Sign) = (top / gdc, bottom / gdc, sign);
+        _initialized = true;
     }
 
     public static implicit operator Rational(int value)
@@ -46,13 +48,13 @@ public readonly struct Rational
         return new(new(value * bottom), bottom, true);
     }
 
-    public static Rational operator -(Rational value) => new(value._top, value._bottom, !value._sign);
-    public static bool operator ==(Rational left, Rational right) => (left._top, left._bottom, left._sign) == (right._top, right._bottom, right._sign);
+    public static Rational operator -(Rational value) => new(value.Top, value.Bottom, !value.Sign);
+    public static bool operator ==(Rational left, Rational right) => (left.Top, left.Bottom, left.Sign) == (right.Top, right.Bottom, right.Sign);
 
-    public static bool operator >(Rational left, Rational right) => left._top * right._bottom * (left._sign ? 1 : -1) > right._top * left._bottom * (right._sign ? 1 : -1);
-    public static Rational operator +(Rational left, Rational right) => new(left._top * right._bottom * (left._sign ? 1 : -1) + right._top * left._bottom * (right._sign ? 1 : -1), left._bottom * right._bottom, true);
-    public static Rational operator *(Rational left, Rational right) => new(left._top * right._top, left._bottom * right._bottom, left._sign == right._sign);
-    public static Rational operator /(Rational left, Rational right) => new(left._top * right._bottom, left._bottom * right._top, left._sign == right._sign);
+    public static bool operator >(Rational left, Rational right) => left.Top * right.Bottom * (left.Sign ? 1 : -1) > right.Top * left.Bottom * (right.Sign ? 1 : -1);
+    public static Rational operator +(Rational left, Rational right) => new(left.Top * right.Bottom * (left.Sign ? 1 : -1) + right.Top * left.Bottom * (right.Sign ? 1 : -1), left.Bottom * right.Bottom, true);
+    public static Rational operator *(Rational left, Rational right) => new(left.Top * right.Top, left.Bottom * right.Bottom, left.Sign == right.Sign);
+    public static Rational operator /(Rational left, Rational right) => new(left.Top * right.Bottom, left.Bottom * right.Top, left.Sign == right.Sign);
 
     public static bool operator !=(Rational left, Rational right) => !(left == right);
     public static bool operator <(Rational left, Rational right) => right > left;
@@ -60,13 +62,28 @@ public readonly struct Rational
     public static bool operator <=(Rational left, Rational right) => left == right || left < right;
     public static Rational operator -(Rational left, Rational right) => left + (-right);
 
+    public static (Rational Quotinent, Rational Remainder) DivRem(Rational left, Rational right)
+    {
+        var fractionalResult = left / right;
+        var quotinentInteger = fractionalResult.Top / fractionalResult.Bottom;
+        var quotinent = new Rational(quotinentInteger, 1, fractionalResult.Sign);
+        var remainder = new Rational(fractionalResult.Top - quotinentInteger * fractionalResult.Bottom, fractionalResult.Bottom, fractionalResult.Sign);
+        return (quotinent, remainder);
+    }
+
+    public static Rational Mod(Rational value) => new(value.Top, value.Bottom, true);
+
     public override bool Equals([NotNullWhen(true)] object? obj) => obj is Rational value && this == value;
     public override int GetHashCode()
     {
         var hash = new HashCode();
-        hash.Add(_top);
-        hash.Add(_bottom);
-        hash.Add(_sign);
+        hash.Add(Top);
+        hash.Add(Bottom);
+        hash.Add(Sign);
         return hash.ToHashCode();
+    }
+    public override string ToString()
+    {
+        return ((decimal)Top / (decimal)Bottom * (Sign ? 1 : -1)).ToString();
     }
 }

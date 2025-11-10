@@ -2,7 +2,8 @@ public record DataRoot(
     RecipePrototype[] Recipes,
     CraftingMachinePrototype[] CraftingMachines,
     MiningDrillPrototype[] MiningDrills,
-    ResourceEntityPrototype[] ResourceEntities
+    ResourceEntityPrototype[] ResourceEntities,
+    TechnologyPrototype[] ProductivityTechnologies
 );
 
 public record RecipePrototype(
@@ -72,4 +73,15 @@ public record MiningProperties(
     decimal Count,
     string? RequiredFluid,
     decimal FluidAmount
+);
+
+public record TechnologyPrototype(
+    string Name,
+    Modifier[] Effects
+);
+
+public record Modifier(
+    string Type,
+    string Recipe,
+    decimal Change
 );

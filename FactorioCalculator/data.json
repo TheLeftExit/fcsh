@@ -22189,4 +22189,136 @@
       },
     },
   ],
+  "ProductivityTechnologies": [
+    {
+      "Name": "asteroid-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "carbonic-asteroid-crushing",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "oxide-asteroid-crushing",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "metallic-asteroid-crushing",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "advanced-carbonic-asteroid-crushing",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "advanced-oxide-asteroid-crushing",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "advanced-metallic-asteroid-crushing",
+          "Change": 0.1,
+        },
+      ],
+    },
+    {
+      "Name": "processing-unit-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "processing-unit",
+          "Change": 0.1,
+        },
+      ],
+    },
+    {
+      "Name": "scrap-recycling-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "scrap-recycling",
+          "Change": 0.1,
+        },
+      ],
+    },
+    {
+      "Name": "steel-plate-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "steel-plate",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "casting-steel",
+          "Change": 0.1,
+        },
+      ],
+    },
+    {
+      "Name": "low-density-structure-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "low-density-structure",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "casting-low-density-structure",
+          "Change": 0.1,
+        },
+      ],
+    },
+    {
+      "Name": "plastic-bar-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "plastic-bar",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "bioplastic",
+          "Change": 0.1,
+        },
+      ],
+    },
+    {
+      "Name": "rocket-fuel-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "rocket-fuel",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "rocket-fuel-from-jelly",
+          "Change": 0.1,
+        },
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "ammonia-rocket-fuel",
+          "Change": 0.1,
+        },
+      ],
+    },
+    {
+      "Name": "rocket-part-productivity",
+      "Effects": [
+        {
+          "Type": "change-recipe-productivity",
+          "Recipe": "rocket-part",
+          "Change": 0.1,
+        },
+      ],
+    },
+  ],
 }

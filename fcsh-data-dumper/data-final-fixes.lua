@@ -64,6 +64,14 @@ function writeItemString(itemValue)
     end
 end
 
+function formatBool(value)
+    if(value == true) then
+        return 'true'
+    else
+        return 'false'
+    end
+end
+
 -- utils end
 
 -- classes start
@@ -213,6 +221,39 @@ for _, resourceEntity in pairs(data.raw['resource']) do
     writeObjectEnd()
 
     writeObjectEnd()
+end
+writeArrayEnd()
+
+writePropertyArray('ProductivityTechnologies')
+for _, technology in pairs(data.raw['technology']) do
+    if(technology.effects ~= nil) then -- https://lua-api.factorio.com/latest/prototypes/TechnologyPrototype.html
+        local objectStarted = false
+        for _, modifier in pairs(technology.effects) do
+            if(--[[modifier.type == 'mining-drill-productivity-bonus' or]] modifier.type == 'change-recipe-productivity') then
+                if(not objectStarted) then
+                    objectStarted = true
+                    writeObjectStart()
+                    writePropertyString('Name', technology.name)
+                    --writePropertyValue('Upgrade', formatBool(technology.upgrade))
+                    --writePropertyString('MaxLevel', technology.max_level) -- ouch, uint32 or string
+                    writePropertyArray('Effects')
+                end
+                writeObjectStart()
+                writePropertyString('Type', modifier.type)
+                if (modifier.type == 'change-recipe-productivity') then
+                    writePropertyString('Recipe', modifier.recipe)
+                    writePropertyValue('Change', modifier.change)
+                --elseif(modifier.type == 'mining-drill-productivity-bonus') then
+                --    writePropertyValue('Modifier', modifier.modifier)
+                end
+                writeObjectEnd()
+            end
+        end
+        if(objectStarted) then
+            writeArrayEnd()
+            writeObjectEnd()
+        end
+    end
 end
 writeArrayEnd()
 
