@@ -1,17 +1,22 @@
 #!/usr/bin/dotnet --
 
+#:project ../FactorioCalculator.Prototypes
+
 var logPath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
     ".factorio",
     "factorio-current.log"
 );
+
+var outputPath = "../data.json";
+
 if (!File.Exists(logPath))
 {
     Console.WriteLine($"factorio-current.log does not exist.");
 }
 using(var logReader = File.OpenText(logPath))
 {
-    using (var jsonWriter = File.CreateText("../FactorioCalculator/data.json"))
+    using (var jsonWriter = File.CreateText(outputPath))
     {
         var lineCount = 0;
         var inDataDumperBlock = false;
@@ -30,6 +35,19 @@ using(var logReader = File.OpenText(logPath))
             jsonWriter.WriteLine(line);
             lineCount++;
         }
-        Console.WriteLine($"Wrote {lineCount} lines to ../FactorioCalculator/data.json");
+        Console.WriteLine($"Wrote {lineCount} lines to {outputPath}");
+    }
+}
+
+using(var jsonReader = File.OpenRead(outputPath))
+{
+    try
+    {
+        DataRoot.FromStream(jsonReader);
+        Console.WriteLine("Successfully deserialized resulting JSON");
+    } catch(Exception e)
+    {
+        Console.WriteLine("Warning: Failed to deserialize resulting JSON!");
+        Console.WriteLine($"{e.GetType()}: {e.Message}");
     }
 }

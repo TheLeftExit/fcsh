@@ -3,10 +3,7 @@ using System.Text.Json;
 
 using (var jsonStream = File.OpenRead("data.json"))
 {
-    var root = JsonSerializer.Deserialize<DataRoot>(jsonStream, new JsonSerializerOptions()
-    {
-        AllowTrailingCommas = true
-    }) ?? throw new InvalidOperationException();
+    var root = DataRoot.FromStream(jsonStream);
     Repository.Initialize(root);
 }
 

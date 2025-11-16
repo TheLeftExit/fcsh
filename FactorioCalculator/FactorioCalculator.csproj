@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="data.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../data.json" CopyToOutputDirectory="PreserveNewest" />
+    <ProjectReference Include="../FactorioCalculator.Prototypes/FactorioCalculator.Prototypes.csproj" />
   </ItemGroup>
 </Project>
